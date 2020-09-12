@@ -1,0 +1,10 @@
+################################
+# Dune module information file #
+################################
+
+#Name of the module
+Module: nrpdj_projekt_leapfrog
+Version: 1
+Maintainer: sf
+#depending on
+Depends: dune-common dune-uggrid dune-geometry dune-localfunctions dune-typetree dune-grid dune-alugrid dune-istl dune-functions dune-pdelab

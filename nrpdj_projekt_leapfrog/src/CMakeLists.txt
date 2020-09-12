@@ -1,0 +1,2 @@
+add_executable("nrpdj_projekt_leapfrog" nrpdj_projekt_leapfrog.cc)
+target_link_dune_default_libraries("nrpdj_projekt_leapfrog")

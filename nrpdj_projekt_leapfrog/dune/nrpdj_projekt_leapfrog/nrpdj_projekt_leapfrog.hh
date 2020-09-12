@@ -1,0 +1,6 @@
+#ifndef NRPDJ_PROJEKT_LEAPFROG_HH
+#define NRPDJ_PROJEKT_LEAPFROG_HH
+
+// add your classes here
+
+#endif // NRPDJ_PROJEKT_LEAPFROG_HH
