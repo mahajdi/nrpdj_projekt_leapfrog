@@ -1,10 +1,6 @@
-*Primjer diskretizacije paraboličke jednadžbe* metodom konačnih
-elemenata u PDELab-u.
+Projekt za NRPDJ2 leapfrog schema za valnu jednadžbu drugog reda.
 
-Primjer je dokumentiran na stranici:
-[pdelab-evol.html](https://web.math.pmf.unizg.hr/nastava/nrpdj/html/pdelab-evol.html).
+Osnovna dokumentacija: Snorre H. Christiansen, Foundations of finite element methods for wave equations of Maxwell type
 
-*Zadatak*. Potrebno je modificirati program tako da rješava inicijalno rubnu
-zadaću za jednadžbu porozne sredine dane u Zadatku 3 na stranici
-[pdelab-evol.html](https://web.math.pmf.unizg.hr/nastava/nrpdj/html/pdelab-evol.html).
-Treba iscrtavati aproksimativno i egzaktno rješenje radi usporedbe.
+
+Autori: Matko Ban i Marta Hajdina
