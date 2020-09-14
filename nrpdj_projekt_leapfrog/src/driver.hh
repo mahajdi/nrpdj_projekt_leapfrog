@@ -54,10 +54,9 @@ void driver(const GV& gv, double dt, double tend)
   // Vektor stupnjeva slobode
   using U =  Dune::PDELab::Backend::Vector<GFS, double>;
   using DGF = Dune::PDELab::DiscreteGridFunction<GFS,U>;
- // typedef Dune::PDELab::DiscreteGridFunction<GFS,U> DGF
   // Lokalni operator za prostorni dio
 //  using SLOP = StationaryLocalOperator<BCTypeParam,FEM>;
- using SLOP = StationaryLocalOperator<BCTypeParam, DGF, DGF, FEM>;
+ using SLOP = StationaryLocalOperator<BCTypeParam,FEM, DGF>;
   // Lokalni operator za vremenski dio
  // using TLOP = TimeLocalOperator<FEM>;
   using MBE = Dune::PDELab::ISTL::BCRSMatrixBackend<>;
@@ -155,7 +154,8 @@ void driver(const GV& gv, double dt, double tend)
      DGF udgfold(gfs,uold);    //napravi mrežnu funkciju od uold
      DGF udgfoldold(gfs,uoldold);    //napravi mrežnu funkciju od uold
 
-     SLOP slop(bctype, uold, uoldold, 4 );  //local space operator ovisi o u^n i u^{n-1}
+     // LOKALNI OPERATOR TRAŽI DGF OBJEKTE, A NE VEKTORE KOEFICIJENATA
+     SLOP slop(bctype, udgfold, udgfoldold, 4);  //local space operator ovisi o u^n i u^{n-1}
      //  SLOP slop(bctype,4, std::make_shared<DGF>(udgfold));
       //SLOP slop(bctype,4, udgfold);   //lokalni operator ovisi o mrežnoj funkciji iz prošlog i pretprošlog koraka
      GO0 go0(gfs, cc, gfs, cc, slop, mbe);  // prostorni GO dodati da ovisi o u^n i u^{n-1}
@@ -182,3 +182,4 @@ void driver(const GV& gv, double dt, double tend)
 }
 
 #endif
+

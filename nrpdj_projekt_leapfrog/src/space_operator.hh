@@ -24,11 +24,11 @@
 
 
 
-template <typename BCType,  typename DGF, typename FEM>
+template <typename BCType, typename FEM, class DGF>
 class StationaryLocalOperator :
   public Dune::PDELab::NumericalJacobianApplyVolume<StationaryLocalOperator<BCType,FEM, DGF> >,
   public Dune::PDELab::NumericalJacobianVolume<StationaryLocalOperator<BCType,FEM, DGF > >,
-  public Dune::PDELab::NumericalJacobianApplyBoundary<StationaryLocalOperator<BCType,FEM,DGF> >,
+  public Dune::PDELab::NumericalJacobianApplyBoundary<StationaryLocalOperator<BCType,FEM, DGF> >,
   public Dune::PDELab::NumericalJacobianBoundary<StationaryLocalOperator<BCType,FEM, DGF> >,
   public Dune::PDELab::FullVolumePattern,
   public Dune::PDELab::LocalOperatorDefaultFlags,
@@ -40,9 +40,8 @@ public:
   enum { doAlphaVolume = true };
 
   StationaryLocalOperator(BCType& bctype_, // boundary cond.type
-                            DGF& uold_, DGF& uoldold_,
-                         unsigned int intorder_=2  ) :
-    bctype( bctype_ ),  uold (uold_), uoldold (uoldold_), intorder( intorder_ )
+                        DGF& uold_, DGF& uoldold_,   unsigned int intorder_=2 ) :
+    bctype( bctype_ ), intorder( intorder_ ), uold (uold_), uoldold (uoldold_)
   {}
 
   // volume integral depending on test and ansatz functions
@@ -94,12 +93,13 @@ public:
 
         // integrate grad u * grad phi_i + a*u*phi_i - f phi_i
         double factor = ip.weight()*eg.geometry().integrationElement(ip.position());
-        double un;   //prošli korak
-        double unn;  //pretprošlikorak
-        uold.evaluate(eg,ip.position(), un );
-        uoldold.evaluate(eg,ip.position(), unn );
+        Dune::FieldVector<double,1> un;   //prošli korak       NE MOŽE DOUBLE VEĆ VEKTOR S JEDNOM KOMPONENTOM!
+        Dune::FieldVector<double,1> unn;  //pretprošlikorak
+        uold.evaluate(eg.entity(), ip.position(), un );
+        uoldold.evaluate(eg.entity(), ip.position(), unn );
         for (size_t i=0; i<lfsv.size(); ++i)
-          r.accumulate(lfsv, i, (u*phi[i] + 0.01*gradu*gradphi[i] - 0.01 * f*phi[i]-2*un*phi[i] + unn*phi[i] ) * factor);
+          r.accumulate(lfsv, i, (u*phi[i] + 0.01*(gradu*gradphi[i]) // ZAGRADE OKO SKALARNOG PRODUKTA
+                                - 0.01 * f*phi[i]-2*un*phi[i] + unn*phi[i] ) * factor);
       }
   }
 /*
@@ -110,8 +110,8 @@ public:
 private:
   BCType& bctype;
   unsigned int intorder;
-  DGF& uold;
-  DGF& uoldold;
   typedef typename FEM::Traits::FiniteElementType::Traits::LocalBasisType LocalBasis;
   Dune::PDELab::LocalBasisCache<LocalBasis> cache;
+  DGF& uold;
+  DGF& uoldold;
 };
